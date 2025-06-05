@@ -1,16 +1,36 @@
-"use client"
+'use client'
 
-import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Textarea } from "@/components/ui/textarea"
-import { Input } from "@/components/ui/input"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Alert, AlertDescription } from "@/components/ui/alert"
-import { Copy, Download, Loader2, CheckCircle, Eye, EyeOff, RefreshCw, Info } from "lucide-react"
-import { useToast } from "@/hooks/use-toast"
-import { Label } from "@/components/ui/label"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
+import { useState } from 'react'
+import { Button } from '@/components/ui/button'
+import { Textarea } from '@/components/ui/textarea'
+import { Input } from '@/components/ui/input'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card'
+import { Alert, AlertDescription } from '@/components/ui/alert'
+import {
+  Copy,
+  Download,
+  Loader2,
+  CheckCircle,
+  Eye,
+  EyeOff,
+  RefreshCw,
+  Info,
+} from 'lucide-react'
+import { useToast } from '@/hooks/use-toast'
+import { Label } from '@/components/ui/label'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip'
 
 interface GameItem {
   title: string
@@ -99,95 +119,95 @@ interface IGDBAuthResponse {
 // Platform mapping for RAWG API
 const PLATFORM_MAPPING: Record<string, number[]> = {
   // Microsoft
-  "microsoft windows": [4],
-  "microsoft xbox 360": [14],
-  "microsoft xbox": [80],
+  'microsoft windows': [4],
+  'microsoft xbox 360': [14],
+  'microsoft xbox': [80],
 
   // Nintendo
-  "nintendo 3ds": [8],
-  "nintendo 64": [83],
-  "nintendo ds": [9],
-  "nintendo gamecube": [11],
-  "nintendo switch": [7],
-  "nintendo wii u": [10],
-  "nintendo wii": [10],
+  'nintendo 3ds': [8],
+  'nintendo 64': [83],
+  'nintendo ds': [9],
+  'nintendo gamecube': [11],
+  'nintendo switch': [7],
+  'nintendo wii u': [10],
+  'nintendo wii': [10],
 
   // Sega
-  "sega dreamcast": [106],
-  "sega saturn": [107],
+  'sega dreamcast': [106],
+  'sega saturn': [107],
 
   // Sony
-  "sony playstation 2": [15],
-  "sony playstation 3": [16],
-  "sony playstation 4": [18],
-  "sony playstation 5": [187],
-  "sony playstation portable": [17],
-  "sony playstation vita": [19],
-  "sony playstation": [27],
+  'sony playstation 2': [15],
+  'sony playstation 3': [16],
+  'sony playstation 4': [18],
+  'sony playstation 5': [187],
+  'sony playstation portable': [17],
+  'sony playstation vita': [19],
+  'sony playstation': [27],
 }
 
 // Platform mapping for TheGamesDB API
 const TGDB_PLATFORM_MAPPING: Record<string, number[]> = {
   // Microsoft
-  "microsoft windows": [1],
-  "microsoft xbox 360": [15],
-  "microsoft xbox": [14],
+  'microsoft windows': [1],
+  'microsoft xbox 360': [15],
+  'microsoft xbox': [14],
 
   // Nintendo
-  "nintendo 3ds": [4912],
-  "nintendo 64": [3],
-  "nintendo ds": [12],
-  "nintendo gamecube": [2],
-  "nintendo switch": [4971],
-  "nintendo wii u": [38],
-  "nintendo wii": [9],
+  'nintendo 3ds': [4912],
+  'nintendo 64': [3],
+  'nintendo ds': [12],
+  'nintendo gamecube': [2],
+  'nintendo switch': [4971],
+  'nintendo wii u': [38],
+  'nintendo wii': [9],
 
   // Sega
-  "sega dreamcast": [16],
-  "sega saturn": [17],
+  'sega dreamcast': [16],
+  'sega saturn': [17],
 
   // Sony
-  "sony playstation 2": [8],
-  "sony playstation 3": [4911],
-  "sony playstation 4": [4919],
-  "sony playstation 5": [4980],
-  "sony playstation portable": [13],
-  "sony playstation vita": [39],
-  "sony playstation": [10],
+  'sony playstation 2': [8],
+  'sony playstation 3': [4911],
+  'sony playstation 4': [4919],
+  'sony playstation 5': [4980],
+  'sony playstation portable': [13],
+  'sony playstation vita': [39],
+  'sony playstation': [10],
 }
 
 // Platform mapping for IGDB API
 const IGDB_PLATFORM_MAPPING: Record<string, number[]> = {
   // Microsoft
-  "microsoft windows": [6],
-  "microsoft xbox 360": [12],
-  "microsoft xbox": [11],
+  'microsoft windows': [6],
+  'microsoft xbox 360': [12],
+  'microsoft xbox': [11],
 
   // Nintendo
-  "nintendo 3ds": [37],
-  "nintendo 64": [4],
-  "nintendo ds": [20],
-  "nintendo gamecube": [21],
-  "nintendo switch": [130],
-  "nintendo wii u": [41],
-  "nintendo wii": [5],
+  'nintendo 3ds': [37],
+  'nintendo 64': [4],
+  'nintendo ds': [20],
+  'nintendo gamecube': [21],
+  'nintendo switch': [130],
+  'nintendo wii u': [41],
+  'nintendo wii': [5],
 
   // Sega
-  "sega dreamcast": [23],
-  "sega saturn": [32],
+  'sega dreamcast': [23],
+  'sega saturn': [32],
 
   // Sony
-  "sony playstation 2": [8],
-  "sony playstation 3": [9],
-  "sony playstation 4": [48],
-  "sony playstation 5": [167],
-  "sony playstation portable": [38],
-  "sony playstation vita": [46],
-  "sony playstation": [7],
+  'sony playstation 2': [8],
+  'sony playstation 3': [9],
+  'sony playstation 4': [48],
+  'sony playstation 5': [167],
+  'sony playstation portable': [38],
+  'sony playstation vita': [46],
+  'sony playstation': [7],
 }
 
 // API Type
-type ApiType = "rawg" | "thegamesdb" | "igdb"
+type ApiType = 'rawg' | 'thegamesdb' | 'igdb'
 
 async function fetchGameCover(
   title: string,
@@ -196,33 +216,37 @@ async function fetchGameCover(
   apiKey?: string,
   apiSecret?: string,
 ): Promise<string> {
-  if (apiType === "rawg") {
+  if (apiType === 'rawg') {
     return fetchGameCoverFromRAWG(title, systemName, apiKey)
-  } else if (apiType === "thegamesdb") {
+  } else if (apiType === 'thegamesdb') {
     return fetchGameCoverFromTheGamesDB(title, systemName, apiKey)
   } else {
     return fetchGameCoverFromIGDB(title, systemName, apiKey, apiSecret)
   }
 }
 
-async function fetchGameCoverFromRAWG(title: string, systemName: string, apiKey?: string): Promise<string> {
+async function fetchGameCoverFromRAWG(
+  title: string,
+  systemName: string,
+  apiKey?: string,
+): Promise<string> {
   try {
     // Get platform IDs for the system
     const platformIds = PLATFORM_MAPPING[systemName.toLowerCase()] || []
 
     // Build search URL
-    const baseUrl = "https://api.rawg.io/api/games"
+    const baseUrl = 'https://api.rawg.io/api/games'
     const params = new URLSearchParams({
       search: title,
-      page_size: "10",
+      page_size: '10',
     })
 
     if (apiKey) {
-      params.append("key", apiKey)
+      params.append('key', apiKey)
     }
 
     if (platformIds.length > 0) {
-      params.append("platforms", platformIds.join(","))
+      params.append('platforms', platformIds.join(','))
     }
 
     const response = await fetch(`${baseUrl}?${params}`)
@@ -238,7 +262,9 @@ async function fetchGameCoverFromRAWG(title: string, systemName: string, apiKey?
       let bestMatch = data.results[0]
 
       // Try to find exact title match first
-      const exactMatch = data.results.find((game) => game.name.toLowerCase() === title.toLowerCase())
+      const exactMatch = data.results.find(
+        (game) => game.name.toLowerCase() === title.toLowerCase(),
+      )
 
       if (exactMatch) {
         bestMatch = exactMatch
@@ -254,20 +280,24 @@ async function fetchGameCoverFromRAWG(title: string, systemName: string, apiKey?
         }
       }
 
-      return bestMatch.background_image || ""
+      return bestMatch.background_image || ''
     }
 
-    return ""
+    return ''
   } catch (error) {
     console.error(`Failed to fetch cover from RAWG for ${title}:`, error)
-    return ""
+    return ''
   }
 }
 
-async function fetchGameCoverFromTheGamesDB(title: string, systemName: string, apiKey?: string): Promise<string> {
+async function fetchGameCoverFromTheGamesDB(
+  title: string,
+  systemName: string,
+  apiKey?: string,
+): Promise<string> {
   if (!apiKey) {
-    console.error("TheGamesDB API requires an API key")
-    return ""
+    console.error('TheGamesDB API requires an API key')
+    return ''
   }
 
   try {
@@ -275,15 +305,15 @@ async function fetchGameCoverFromTheGamesDB(title: string, systemName: string, a
     const platformIds = TGDB_PLATFORM_MAPPING[systemName.toLowerCase()] || []
 
     // Build search URL
-    const baseUrl = "https://api.thegamesdb.net/v1"
+    const baseUrl = 'https://api.thegamesdb.net/v1'
     const params = new URLSearchParams({
       apikey: apiKey,
       name: title,
-      fields: "platform,release_date,boxart",
+      fields: 'platform,release_date,boxart',
     })
 
     if (platformIds.length > 0) {
-      params.append("filter[platform]", platformIds.join(","))
+      params.append('filter[platform]', platformIds.join(','))
     }
 
     // Search for the game
@@ -300,13 +330,17 @@ async function fetchGameCoverFromTheGamesDB(title: string, systemName: string, a
       let bestMatch = data.data.games[0]
 
       // Try to find exact title match first
-      const exactMatch = data.data.games.find((game) => game.game_title.toLowerCase() === title.toLowerCase())
+      const exactMatch = data.data.games.find(
+        (game) => game.game_title.toLowerCase() === title.toLowerCase(),
+      )
 
       if (exactMatch) {
         bestMatch = exactMatch
       } else if (platformIds.length > 0) {
         // Find match with correct platform if specified
-        const platformMatch = data.data.games.find((game) => platformIds.includes(game.platform))
+        const platformMatch = data.data.games.find((game) =>
+          platformIds.includes(game.platform),
+        )
         if (platformMatch) {
           bestMatch = platformMatch
         }
@@ -315,10 +349,14 @@ async function fetchGameCoverFromTheGamesDB(title: string, systemName: string, a
       // If we have boxart, we need to get the image URL
       if (bestMatch.boxart?.front) {
         // Get the images base URL and data
-        const imagesResponse = await fetch(`${baseUrl}/Games/Images?apikey=${apiKey}&games_id=${bestMatch.id}`)
+        const imagesResponse = await fetch(
+          `${baseUrl}/Games/Images?apikey=${apiKey}&games_id=${bestMatch.id}`,
+        )
 
         if (!imagesResponse.ok) {
-          throw new Error(`TheGamesDB Images API error: ${imagesResponse.status}`)
+          throw new Error(
+            `TheGamesDB Images API error: ${imagesResponse.status}`,
+          )
         }
 
         const imagesData: TheGamesDBImageData = await imagesResponse.json()
@@ -328,7 +366,9 @@ async function fetchGameCoverFromTheGamesDB(title: string, systemName: string, a
 
           // Look for boxart front images
           if (gameImages.boxart) {
-            const frontBoxart = gameImages.boxart.find((img) => img.filename.includes("front"))
+            const frontBoxart = gameImages.boxart.find((img) =>
+              img.filename.includes('front'),
+            )
             if (frontBoxart) {
               return `${imagesData.base_url}/boxart/front/${frontBoxart.filename}`
             }
@@ -347,24 +387,27 @@ async function fetchGameCoverFromTheGamesDB(title: string, systemName: string, a
       }
     }
 
-    return ""
+    return ''
   } catch (error) {
     console.error(`Failed to fetch cover from TheGamesDB for ${title}:`, error)
-    return ""
+    return ''
   }
 }
 
-async function getIGDBAccessToken(clientId: string, clientSecret: string): Promise<string> {
+async function getIGDBAccessToken(
+  clientId: string,
+  clientSecret: string,
+): Promise<string> {
   try {
     const response = await fetch(`https://id.twitch.tv/oauth2/token`, {
-      method: "POST",
+      method: 'POST',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify({
         client_id: clientId,
         client_secret: clientSecret,
-        grant_type: "client_credentials",
+        grant_type: 'client_credentials',
       }),
     })
 
@@ -375,7 +418,7 @@ async function getIGDBAccessToken(clientId: string, clientSecret: string): Promi
     const data: IGDBAuthResponse = await response.json()
     return data.access_token
   } catch (error) {
-    console.error("Failed to get IGDB access token:", error)
+    console.error('Failed to get IGDB access token:', error)
     throw error
   }
 }
@@ -387,8 +430,8 @@ async function fetchGameCoverFromIGDB(
   clientSecret?: string,
 ): Promise<string> {
   if (!clientId || !clientSecret) {
-    console.error("IGDB API requires both Client ID and Client Secret")
-    return ""
+    console.error('IGDB API requires both Client ID and Client Secret')
+    return ''
   }
 
   try {
@@ -403,15 +446,15 @@ async function fetchGameCoverFromIGDB(
 
     // Add platform filter if available
     if (platformIds.length > 0) {
-      query += ` where platforms = (${platformIds.join(",")});`
+      query += ` where platforms = (${platformIds.join(',')});`
     }
 
     // Make the API request
-    const response = await fetch("https://api.igdb.com/v4/games", {
-      method: "POST",
+    const response = await fetch('https://api.igdb.com/v4/games', {
+      method: 'POST',
       headers: {
-        Accept: "application/json",
-        "Client-ID": clientId,
+        Accept: 'application/json',
+        'Client-ID': clientId,
         Authorization: `Bearer ${accessToken}`,
       },
       body: query,
@@ -428,14 +471,18 @@ async function fetchGameCoverFromIGDB(
       let bestMatch = games[0]
 
       // Try to find exact title match first
-      const exactMatch = games.find((game) => game.name.toLowerCase() === title.toLowerCase())
+      const exactMatch = games.find(
+        (game) => game.name.toLowerCase() === title.toLowerCase(),
+      )
 
       if (exactMatch) {
         bestMatch = exactMatch
       } else if (platformIds.length > 0) {
         // Find match with correct platform if specified
         const platformMatch = games.find((game) =>
-          game.platforms?.some((platformId) => platformIds.includes(platformId)),
+          game.platforms?.some((platformId) =>
+            platformIds.includes(platformId),
+          ),
         )
         if (platformMatch) {
           bestMatch = platformMatch
@@ -449,10 +496,10 @@ async function fetchGameCoverFromIGDB(
       }
     }
 
-    return ""
+    return ''
   } catch (error) {
     console.error(`Failed to fetch cover from IGDB for ${title}:`, error)
-    return ""
+    return ''
   }
 }
 
@@ -486,44 +533,45 @@ export default function GameCoverResolver() {
 
   const [outputJson, setOutputJson] = useState<GameItem[]>([])
   const [isProcessing, setIsProcessing] = useState(false)
-  const [error, setError] = useState<string>("")
+  const [error, setError] = useState<string>('')
   const [copied, setCopied] = useState(false)
-  const [rawgApiKey, setRawgApiKey] = useState("")
-  const [tgdbApiKey, setTgdbApiKey] = useState("")
-  const [igdbClientId, setIgdbClientId] = useState("")
-  const [igdbClientSecret, setIgdbClientSecret] = useState("")
+  const [rawgApiKey, setRawgApiKey] = useState('')
+  const [tgdbApiKey, setTgdbApiKey] = useState('')
+  const [igdbClientId, setIgdbClientId] = useState('')
+  const [igdbClientSecret, setIgdbClientSecret] = useState('')
   const [showRawgApiKey, setShowRawgApiKey] = useState(false)
   const [showTgdbApiKey, setShowTgdbApiKey] = useState(false)
   const [showIgdbClientId, setShowIgdbClientId] = useState(false)
   const [showIgdbClientSecret, setShowIgdbClientSecret] = useState(false)
   const [processedCount, setProcessedCount] = useState(0)
   const [totalCount, setTotalCount] = useState(0)
-  const [activeApi, setActiveApi] = useState<ApiType>("rawg")
+  const [activeApi, setActiveApi] = useState<ApiType>('rawg')
   const { toast } = useToast()
 
   const processGames = async () => {
-    setError("")
+    setError('')
     setIsProcessing(true)
     setProcessedCount(0)
 
     // Check API key requirements
-    if (activeApi === "thegamesdb" && !tgdbApiKey) {
-      setError("TheGamesDB API requires an API key")
+    if (activeApi === 'thegamesdb' && !tgdbApiKey) {
+      setError('TheGamesDB API requires an API key')
       toast({
-        title: "API Key Required",
-        description: "TheGamesDB API requires an API key to function.",
-        variant: "destructive",
+        title: 'API Key Required',
+        description: 'TheGamesDB API requires an API key to function.',
+        variant: 'destructive',
       })
       setIsProcessing(false)
       return
     }
 
-    if (activeApi === "igdb" && (!igdbClientId || !igdbClientSecret)) {
-      setError("IGDB API requires both Client ID and Client Secret")
+    if (activeApi === 'igdb' && (!igdbClientId || !igdbClientSecret)) {
+      setError('IGDB API requires both Client ID and Client Secret')
       toast({
-        title: "API Credentials Required",
-        description: "IGDB API requires both Client ID and Client Secret to function.",
-        variant: "destructive",
+        title: 'API Credentials Required',
+        description:
+          'IGDB API requires both Client ID and Client Secret to function.',
+        variant: 'destructive',
       })
       setIsProcessing(false)
       return
@@ -534,13 +582,15 @@ export default function GameCoverResolver() {
       const games: GameItem[] = JSON.parse(inputJson)
 
       if (!Array.isArray(games)) {
-        throw new Error("Input must be an array of games")
+        throw new Error('Input must be an array of games')
       }
 
       // Validate structure
       for (const game of games) {
         if (!game.title || !game.systemName) {
-          throw new Error("Each game must have 'title' and 'systemName' properties")
+          throw new Error(
+            "Each game must have 'title' and 'systemName' properties",
+          )
         }
       }
 
@@ -553,14 +603,27 @@ export default function GameCoverResolver() {
         const game = games[i]
 
         try {
-          let imageUrl = ""
+          let imageUrl = ''
 
-          if (activeApi === "rawg") {
-            imageUrl = await fetchGameCoverFromRAWG(game.title, game.systemName, rawgApiKey || undefined)
-          } else if (activeApi === "thegamesdb") {
-            imageUrl = await fetchGameCoverFromTheGamesDB(game.title, game.systemName, tgdbApiKey)
-          } else if (activeApi === "igdb") {
-            imageUrl = await fetchGameCoverFromIGDB(game.title, game.systemName, igdbClientId, igdbClientSecret)
+          if (activeApi === 'rawg') {
+            imageUrl = await fetchGameCoverFromRAWG(
+              game.title,
+              game.systemName,
+              rawgApiKey || undefined,
+            )
+          } else if (activeApi === 'thegamesdb') {
+            imageUrl = await fetchGameCoverFromTheGamesDB(
+              game.title,
+              game.systemName,
+              tgdbApiKey,
+            )
+          } else if (activeApi === 'igdb') {
+            imageUrl = await fetchGameCoverFromIGDB(
+              game.title,
+              game.systemName,
+              igdbClientId,
+              igdbClientSecret,
+            )
           }
 
           gamesWithCovers.push({
@@ -573,7 +636,7 @@ export default function GameCoverResolver() {
           // Rate limiting: wait between requests
           // Different APIs have different rate limits
           if (i < games.length - 1) {
-            const delay = activeApi === "igdb" ? 250 : 1000 // IGDB allows more requests per second
+            const delay = activeApi === 'igdb' ? 250 : 1000 // IGDB allows more requests per second
             await new Promise((resolve) => setTimeout(resolve, delay))
           }
         } catch (error) {
@@ -586,16 +649,17 @@ export default function GameCoverResolver() {
 
       const successCount = gamesWithCovers.filter((g) => g.imageUrl).length
       toast({
-        title: "Processing Complete!",
+        title: 'Processing Complete!',
         description: `Found covers for ${successCount} out of ${gamesWithCovers.length} games.`,
       })
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : "Invalid JSON format"
+      const errorMessage =
+        err instanceof Error ? err.message : 'Invalid JSON format'
       setError(errorMessage)
       toast({
-        title: "Error",
+        title: 'Error',
         description: errorMessage,
-        variant: "destructive",
+        variant: 'destructive',
       })
     } finally {
       setIsProcessing(false)
@@ -609,41 +673,43 @@ export default function GameCoverResolver() {
       await navigator.clipboard.writeText(JSON.stringify(outputJson, null, 2))
       setCopied(true)
       toast({
-        title: "Copied!",
-        description: "JSON copied to clipboard successfully.",
+        title: 'Copied!',
+        description: 'JSON copied to clipboard successfully.',
       })
       setTimeout(() => setCopied(false), 2000)
     } catch (err) {
       toast({
-        title: "Error",
-        description: "Failed to copy to clipboard.",
-        variant: "destructive",
+        title: 'Error',
+        description: 'Failed to copy to clipboard.',
+        variant: 'destructive',
       })
     }
   }
 
   const downloadJson = () => {
     const blob = new Blob([JSON.stringify(outputJson, null, 2)], {
-      type: "application/json",
+      type: 'application/json',
     })
     const url = URL.createObjectURL(blob)
-    const a = document.createElement("a")
+    const a = document.createElement('a')
     a.href = url
-    a.download = "games-with-covers.json"
+    a.download = 'games-with-covers.json'
     document.body.appendChild(a)
     a.click()
     document.body.removeChild(a)
     URL.revokeObjectURL(url)
   }
 
-  const progressPercentage = totalCount > 0 ? (processedCount / totalCount) * 100 : 0
+  const progressPercentage =
+    totalCount > 0 ? (processedCount / totalCount) * 100 : 0
 
   return (
     <div className="container mx-auto p-6 max-w-6xl">
       <div className="mb-8">
         <h1 className="text-3xl font-bold mb-2">Game Cover Resolver</h1>
         <p className="text-muted-foreground">
-          Add real cover images to your game collection JSON using game database APIs.
+          Add real cover images to your game collection JSON using game database
+          APIs.
         </p>
       </div>
 
@@ -651,10 +717,15 @@ export default function GameCoverResolver() {
       <Card className="mb-6">
         <CardHeader>
           <CardTitle>Select API Source</CardTitle>
-          <CardDescription>Choose which game database API to use for fetching cover images</CardDescription>
+          <CardDescription>
+            Choose which game database API to use for fetching cover images
+          </CardDescription>
         </CardHeader>
         <CardContent>
-          <Tabs defaultValue="rawg" onValueChange={(value) => setActiveApi(value as ApiType)}>
+          <Tabs
+            defaultValue="rawg"
+            onValueChange={(value) => setActiveApi(value as ApiType)}
+          >
             <TabsList className="grid w-full grid-cols-3">
               <TabsTrigger value="rawg">RAWG</TabsTrigger>
               <TabsTrigger value="thegamesdb">TheGamesDB</TabsTrigger>
@@ -666,8 +737,9 @@ export default function GameCoverResolver() {
               <div className="space-y-4">
                 <div>
                   <p className="text-sm">
-                    RAWG is the largest video game database with 500,000+ games. Works without an API key (limited to 1
-                    request per second) or with a free API key (20,000 requests per month).
+                    RAWG is the largest video game database with 500,000+ games.
+                    Works without an API key (limited to 1 request per second)
+                    or with a free API key (20,000 requests per month).
                   </p>
                 </div>
                 <div className="space-y-2">
@@ -676,7 +748,7 @@ export default function GameCoverResolver() {
                     <div className="relative flex-1">
                       <Input
                         id="rawg-api-key"
-                        type={showRawgApiKey ? "text" : "password"}
+                        type={showRawgApiKey ? 'text' : 'password'}
                         value={rawgApiKey}
                         onChange={(e) => setRawgApiKey(e.target.value)}
                         placeholder="Enter your RAWG API key..."
@@ -688,12 +760,16 @@ export default function GameCoverResolver() {
                         className="absolute right-0 top-0 h-full px-3"
                         onClick={() => setShowRawgApiKey(!showRawgApiKey)}
                       >
-                        {showRawgApiKey ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                        {showRawgApiKey ? (
+                          <EyeOff className="h-4 w-4" />
+                        ) : (
+                          <Eye className="h-4 w-4" />
+                        )}
                       </Button>
                     </div>
                   </div>
                   <p className="text-xs text-muted-foreground">
-                    Get a free API key at{" "}
+                    Get a free API key at{' '}
                     <a
                       href="https://rawg.io/apidocs"
                       target="_blank"
@@ -712,16 +788,19 @@ export default function GameCoverResolver() {
               <div className="space-y-4">
                 <div>
                   <p className="text-sm">
-                    TheGamesDB is a community-driven game database with excellent retro game coverage. API key required.
+                    TheGamesDB is a community-driven game database with
+                    excellent retro game coverage. API key required.
                   </p>
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="tgdb-api-key">TheGamesDB API Key (Required)</Label>
+                  <Label htmlFor="tgdb-api-key">
+                    TheGamesDB API Key (Required)
+                  </Label>
                   <div className="flex gap-2">
                     <div className="relative flex-1">
                       <Input
                         id="tgdb-api-key"
-                        type={showTgdbApiKey ? "text" : "password"}
+                        type={showTgdbApiKey ? 'text' : 'password'}
                         value={tgdbApiKey}
                         onChange={(e) => setTgdbApiKey(e.target.value)}
                         placeholder="Enter your TheGamesDB API key..."
@@ -733,12 +812,16 @@ export default function GameCoverResolver() {
                         className="absolute right-0 top-0 h-full px-3"
                         onClick={() => setShowTgdbApiKey(!showTgdbApiKey)}
                       >
-                        {showTgdbApiKey ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                        {showTgdbApiKey ? (
+                          <EyeOff className="h-4 w-4" />
+                        ) : (
+                          <Eye className="h-4 w-4" />
+                        )}
                       </Button>
                     </div>
                   </div>
                   <p className="text-xs text-muted-foreground">
-                    Get a free API key at{" "}
+                    Get a free API key at{' '}
                     <a
                       href="https://thegamesdb.net/api-key.php"
                       target="_blank"
@@ -757,25 +840,32 @@ export default function GameCoverResolver() {
               <div className="space-y-4">
                 <div>
                   <p className="text-sm">
-                    IGDB (Internet Game Database) offers high-quality cover images and comprehensive game data. Requires
-                    Twitch Developer credentials.
+                    IGDB (Internet Game Database) offers high-quality cover
+                    images and comprehensive game data. Requires Twitch
+                    Developer credentials.
                   </p>
                 </div>
                 <div className="space-y-4">
                   <div className="space-y-2">
                     <div className="flex items-center">
-                      <Label htmlFor="igdb-client-id">Client ID (Required)</Label>
+                      <Label htmlFor="igdb-client-id">
+                        Client ID (Required)
+                      </Label>
                       <TooltipProvider>
                         <Tooltip>
                           <TooltipTrigger asChild>
-                            <Button variant="ghost" size="sm" className="h-4 w-4 p-0 ml-1">
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              className="h-4 w-4 p-0 ml-1"
+                            >
                               <Info className="h-3 w-3" />
                             </Button>
                           </TooltipTrigger>
                           <TooltipContent>
                             <p className="w-80 text-xs">
-                              Get your Client ID from the Twitch Developer Console. You'll need to register an
-                              application.
+                              Get your Client ID from the Twitch Developer
+                              Console. You'll need to register an application.
                             </p>
                           </TooltipContent>
                         </Tooltip>
@@ -784,7 +874,7 @@ export default function GameCoverResolver() {
                     <div className="relative">
                       <Input
                         id="igdb-client-id"
-                        type={showIgdbClientId ? "text" : "password"}
+                        type={showIgdbClientId ? 'text' : 'password'}
                         value={igdbClientId}
                         onChange={(e) => setIgdbClientId(e.target.value)}
                         placeholder="Enter your IGDB Client ID..."
@@ -796,17 +886,23 @@ export default function GameCoverResolver() {
                         className="absolute right-0 top-0 h-full px-3"
                         onClick={() => setShowIgdbClientId(!showIgdbClientId)}
                       >
-                        {showIgdbClientId ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                        {showIgdbClientId ? (
+                          <EyeOff className="h-4 w-4" />
+                        ) : (
+                          <Eye className="h-4 w-4" />
+                        )}
                       </Button>
                     </div>
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="igdb-client-secret">Client Secret (Required)</Label>
+                    <Label htmlFor="igdb-client-secret">
+                      Client Secret (Required)
+                    </Label>
                     <div className="relative">
                       <Input
                         id="igdb-client-secret"
-                        type={showIgdbClientSecret ? "text" : "password"}
+                        type={showIgdbClientSecret ? 'text' : 'password'}
                         value={igdbClientSecret}
                         onChange={(e) => setIgdbClientSecret(e.target.value)}
                         placeholder="Enter your IGDB Client Secret..."
@@ -816,15 +912,21 @@ export default function GameCoverResolver() {
                         variant="ghost"
                         size="sm"
                         className="absolute right-0 top-0 h-full px-3"
-                        onClick={() => setShowIgdbClientSecret(!showIgdbClientSecret)}
+                        onClick={() =>
+                          setShowIgdbClientSecret(!showIgdbClientSecret)
+                        }
                       >
-                        {showIgdbClientSecret ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                        {showIgdbClientSecret ? (
+                          <EyeOff className="h-4 w-4" />
+                        ) : (
+                          <Eye className="h-4 w-4" />
+                        )}
                       </Button>
                     </div>
                   </div>
 
                   <p className="text-xs text-muted-foreground">
-                    Get your credentials at{" "}
+                    Get your credentials at{' '}
                     <a
                       href="https://dev.twitch.tv/console/apps"
                       target="_blank"
@@ -848,7 +950,8 @@ export default function GameCoverResolver() {
           <CardHeader>
             <CardTitle>Input JSON</CardTitle>
             <CardDescription>
-              Paste your game collection JSON here. Each game should have 'title' and 'systemName' properties.
+              Paste your game collection JSON here. Each game should have
+              'title' and 'systemName' properties.
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -882,7 +985,11 @@ export default function GameCoverResolver() {
               </div>
             )}
 
-            <Button onClick={processGames} disabled={isProcessing || !inputJson.trim()} className="w-full">
+            <Button
+              onClick={processGames}
+              disabled={isProcessing || !inputJson.trim()}
+              className="w-full"
+            >
               {isProcessing ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -891,8 +998,12 @@ export default function GameCoverResolver() {
               ) : (
                 <>
                   <RefreshCw className="mr-2 h-4 w-4" />
-                  Process Games with{" "}
-                  {activeApi === "rawg" ? "RAWG" : activeApi === "thegamesdb" ? "TheGamesDB" : "IGDB"}
+                  Process Games with{' '}
+                  {activeApi === 'rawg'
+                    ? 'RAWG'
+                    : activeApi === 'thegamesdb'
+                      ? 'TheGamesDB'
+                      : 'IGDB'}
                 </>
               )}
             </Button>
@@ -904,15 +1015,24 @@ export default function GameCoverResolver() {
           <CardHeader>
             <CardTitle>Enhanced JSON</CardTitle>
             <CardDescription>
-              Your games with added imageUrl properties from{" "}
-              {activeApi === "rawg" ? "RAWG" : activeApi === "thegamesdb" ? "TheGamesDB" : "IGDB"} database.
+              Your games with added imageUrl properties from{' '}
+              {activeApi === 'rawg'
+                ? 'RAWG'
+                : activeApi === 'thegamesdb'
+                  ? 'TheGamesDB'
+                  : 'IGDB'}{' '}
+              database.
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             {outputJson.length > 0 ? (
               <>
                 <div className="flex gap-2">
-                  <Button onClick={copyToClipboard} variant="outline" className="flex-1">
+                  <Button
+                    onClick={copyToClipboard}
+                    variant="outline"
+                    className="flex-1"
+                  >
                     {copied ? (
                       <>
                         <CheckCircle className="mr-2 h-4 w-4 text-green-600" />
@@ -942,15 +1062,19 @@ export default function GameCoverResolver() {
                   <h3 className="text-lg font-semibold mb-4">Preview</h3>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-h-[300px] overflow-y-auto">
                     {outputJson.slice(0, 6).map((game, index) => (
-                      <div key={index} className="flex items-center space-x-3 p-3 border rounded-lg">
+                      <div
+                        key={index}
+                        className="flex items-center space-x-3 p-3 border rounded-lg"
+                      >
                         {game.imageUrl ? (
                           <img
-                            src={game.imageUrl || "/placeholder.svg"}
+                            src={game.imageUrl || '/placeholder.svg'}
                             alt={game.title}
                             className="w-12 h-16 object-cover rounded"
                             onError={(e) => {
                               const target = e.target as HTMLImageElement
-                              target.src = "/placeholder.svg?height=64&width=48&text=No+Image"
+                              target.src =
+                                '/placeholder.svg?height=64&width=48&text=No+Image'
                             }}
                           />
                         ) : (
@@ -959,14 +1083,20 @@ export default function GameCoverResolver() {
                           </div>
                         )}
                         <div className="flex-1 min-w-0">
-                          <p className="font-medium text-sm truncate">{game.title}</p>
-                          <p className="text-xs text-muted-foreground truncate">{game.systemName}</p>
+                          <p className="font-medium text-sm truncate">
+                            {game.title}
+                          </p>
+                          <p className="text-xs text-muted-foreground truncate">
+                            {game.systemName}
+                          </p>
                         </div>
                       </div>
                     ))}
                     {outputJson.length > 6 && (
                       <div className="flex items-center justify-center p-3 border rounded-lg border-dashed">
-                        <p className="text-sm text-muted-foreground">+{outputJson.length - 6} more games</p>
+                        <p className="text-sm text-muted-foreground">
+                          +{outputJson.length - 6} more games
+                        </p>
                       </div>
                     )}
                   </div>
@@ -976,7 +1106,9 @@ export default function GameCoverResolver() {
               <div className="min-h-[400px] flex items-center justify-center text-muted-foreground">
                 <div className="text-center">
                   <p className="mb-2">No processed games yet</p>
-                  <p className="text-sm">Process your input JSON to see results here</p>
+                  <p className="text-sm">
+                    Process your input JSON to see results here
+                  </p>
                 </div>
               </div>
             )}
@@ -991,15 +1123,21 @@ export default function GameCoverResolver() {
         </CardHeader>
         <CardContent>
           <ol className="list-decimal list-inside space-y-2 text-sm">
-            <li>Select your preferred game database API (RAWG, TheGamesDB, or IGDB)</li>
             <li>
-              {activeApi === "rawg"
-                ? "Optionally add your RAWG API key for better rate limits"
-                : activeApi === "thegamesdb"
-                  ? "Add your TheGamesDB API key (required)"
-                  : "Add your IGDB Client ID and Client Secret (required)"}
+              Select your preferred game database API (RAWG, TheGamesDB, or
+              IGDB)
             </li>
-            <li>Paste your JSON array in the input field (each game needs 'title' and 'systemName')</li>
+            <li>
+              {activeApi === 'rawg'
+                ? 'Optionally add your RAWG API key for better rate limits'
+                : activeApi === 'thegamesdb'
+                  ? 'Add your TheGamesDB API key (required)'
+                  : 'Add your IGDB Client ID and Client Secret (required)'}
+            </li>
+            <li>
+              Paste your JSON array in the input field (each game needs 'title'
+              and 'systemName')
+            </li>
             <li>Click "Process Games" to fetch real cover images</li>
             <li>Review the enhanced JSON with imageUrl properties added</li>
             <li>Copy to clipboard or download the result</li>
@@ -1009,16 +1147,19 @@ export default function GameCoverResolver() {
             <p className="text-sm font-medium mb-2">About the APIs:</p>
             <div className="space-y-2 text-sm text-muted-foreground">
               <p>
-                <strong>RAWG:</strong> Largest video game database with 500,000+ games. Works without an API key
-                (limited to 1 request per second) or with a free API key (20,000 requests per month).
+                <strong>RAWG:</strong> Largest video game database with 500,000+
+                games. Works without an API key (limited to 1 request per
+                second) or with a free API key (20,000 requests per month).
               </p>
               <p>
-                <strong>TheGamesDB:</strong> Community-driven game database with excellent retro game coverage. Requires
-                an API key but offers great results for older and obscure titles.
+                <strong>TheGamesDB:</strong> Community-driven game database with
+                excellent retro game coverage. Requires an API key but offers
+                great results for older and obscure titles.
               </p>
               <p>
-                <strong>IGDB:</strong> Professional game database with high-quality cover images and comprehensive data.
-                Requires Twitch Developer credentials (Client ID and Client Secret).
+                <strong>IGDB:</strong> Professional game database with
+                high-quality cover images and comprehensive data. Requires
+                Twitch Developer credentials (Client ID and Client Secret).
               </p>
             </div>
           </div>
